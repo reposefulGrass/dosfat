@@ -29,12 +29,10 @@ struct boot_block {
 };
 typedef struct boot_block boot_block_t;
 
-#define BOOT_BLOCK_SIZE	(sizeof(boot_block_t))
-
 
 boot_block_t
-parse_boot_block (uint8_t *raw_bytes, uint32_t size) {
-    assert(size == BOOT_BLOCK_SIZE);
+boot_block_parse (uint8_t *raw_bytes, uint32_t size) {
+    assert(size == sizeof(boot_block_t));
 
     boot_block_t bb;          
     memcpy(&bb, raw_bytes, size);
@@ -44,12 +42,12 @@ parse_boot_block (uint8_t *raw_bytes, uint32_t size) {
 
 int
 main (int argc, char **argv) {
-    uint8_t *raw_bytes = malloc(BOOT_BLOCK_SIZE);
+    uint8_t *raw_bytes = malloc(sizeof(boot_block_t));
     raw_bytes[0] = 0x01;
     raw_bytes[1] = 0x02;
     raw_bytes[2] = 0x03;
 
-    boot_block_t bb = parse_boot_block(raw_bytes, 512); 
+    boot_block_t bb = boot_block_parse(raw_bytes, 512); 
     printf(
         "Bootstrap Program Part: [%x %x %x]\n", 
         bb.bootstrap_program_part[0],
